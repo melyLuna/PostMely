@@ -28,13 +28,12 @@
                 </flux:textarea>
 
                 {{-- Previsualizar imagen --}}
-                <div class="space-y-2">
-                    @if ($post->img_path)
-                        <p class="text-sm text-zinc-500">Imagen actual:</p>
-                        <img src="{{ Storage::url($post->img_path) }}" alt="Imagen actual"
-                            class="h-32 w-auto rounded-lg object-cover">
-                    @endif
-                    <flux:input type="file" label="Nueva imagen (opcional)" name="img_path" accept="image/*" />
+                <div class="space-y-2" x-data="{ preview: null }">
+                    <img :src="preview ?? '{{ $post->img_path ? Storage::url($post->img_path) : '' }}'"
+                        x-show="preview || {{ $post->img_path ? 'true' : 'false' }}"
+                        class="h-32 w-auto rounded-lg object-cover">
+                    <flux:input type="file" label="Nueva imagen (opcional)" name="img_path" accept="image/*"
+                        @change="preview = URL.createObjectURL($event.target.files[0])" />
                     @error('img_path')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror

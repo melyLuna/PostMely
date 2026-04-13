@@ -10,10 +10,11 @@
                 @csrf
 
                 <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-                <flux:input label="Imagen del post" name="img_path" type="file" accept="image/*" />
-                @error('img_path')
-                    <div class="text-red-500">{{ $message }}</div>
-                @enderror
+                <div x-data="{ preview: null }">
+                    <flux:input label="Imagen del post" name="img_path" type="file" accept="image/*"
+                        @change="preview = URL.createObjectURL($event.target.files[0])" />
+                    <img x-show="preview" :src="preview" class="mt-2 h-32 w-auto rounded-lg object-cover">
+                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <flux:input label="Título" name="title" :value="old('title')" required />
