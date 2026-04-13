@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,7 +26,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.posts.create', compact('categories'));
+        $tags = Tag::all();
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -41,17 +43,21 @@ class PostController extends Controller
             'img_path'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'user_id'      => 'required|exists:users,id',
             'category_id'  => 'required|exists:categories,id',
+            'tags'         => 'nullable|array|exists:tags,id',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
         ]);
 
-         if ($request->hasFile('img_path')) {
+        if ($request->hasFile('img_path')) {
             $validated['img_path'] = $request->file('img_path')->store('posts', 'public');
         } else {
             $validated['img_path'] = null;
         }
 
-        Post::create($validated);
+        $post = Post::create($validated);
+        if ($request->tags) {
+        $post->tags()->sync($request->tags); 
+    }
 
         return redirect()->route('admin.posts.index')->with('info', 'Post creado.');
     }
@@ -70,8 +76,8 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all();
-
-        return view('admin.posts.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -87,6 +93,7 @@ class PostController extends Controller
             'img_path'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'user_id'      => 'required|exists:users,id',
             'category_id'  => 'required|exists:categories,id',
+            'tags'         => 'nullable|array|exists:tags,id',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
         ]);
@@ -101,6 +108,9 @@ class PostController extends Controller
         }
 
         $post->update($validated);
+        if ($request->tags) {
+            $post->tags()->sync($request->tags); // Adjuntar etiquetas
+        }
 
         return redirect()->route('admin.posts.index')->with('success', 'Post actualizado.');
     }
