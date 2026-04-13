@@ -6,7 +6,7 @@
         </div>
 
         <flux:card>
-            <form action="{{ route('admin.posts.update', $post) }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.posts.update', $post) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
                 
@@ -25,6 +25,17 @@
                 <flux:textarea label="Contenido del Post" name="content" rows="10" required>
                     {{ old('content', $post->content) }}
                 </flux:textarea>
+
+                 {{-- Previsualizar imagen --}}
+                <div class="space-y-2">
+                    @if($post->img_path)
+                        <p class="text-sm text-zinc-500">Imagen actual:</p>
+                        <img src="{{ Storage::url($post->img_path) }}" alt="Imagen actual"
+                            class="h-32 w-auto rounded-lg object-cover">
+                    @endif
+                    <flux:input type="file" label="Nueva imagen (opcional)" name="img_path" accept="image/*" />
+                    @error('img_path') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {{-- En Flux Select, a veces es mejor manejar el 'selected' manualmente en los options --}}

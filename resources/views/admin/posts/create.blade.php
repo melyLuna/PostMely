@@ -6,11 +6,14 @@
         </div>
 
         <flux:card>
-            <form action="{{ route('admin.posts.store') }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.posts.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 
                 <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-                <input type="hidden" name="img_path" value="posts/default.jpg">
+                <flux:input label="Imagen del post" name="img_path" type="file" accept="image/*" />
+                @error('img_path')
+                    <div class="text-red-500">{{ $message }}</div>
+                @enderror
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <flux:input label="Título" name="title" :value="old('title')" required />

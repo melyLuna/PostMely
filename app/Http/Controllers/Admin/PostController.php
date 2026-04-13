@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -37,12 +38,18 @@ class PostController extends Controller
             'slug'         => 'required|string|unique:posts,slug',
             'excerpt'      => 'required|string',
             'content'      => 'required|string',
-            'img_path'     => 'nullable|string',
+            'img_path'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'user_id'      => 'required|exists:users,id',
             'category_id'  => 'required|exists:categories,id',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
         ]);
+
+         if ($request->hasFile('img_path')) {
+            $validated['img_path'] = $request->file('img_path')->store('posts', 'public');
+        } else {
+            $validated['img_path'] = null;
+        }
 
         Post::create($validated);
 
@@ -77,12 +84,21 @@ class PostController extends Controller
             'slug'         => 'required|string|unique:posts,slug,' . $post->id,
             'excerpt'      => 'required|string',
             'content'      => 'required|string',
-            'img_path'     => 'nullable|string',
+            'img_path'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'user_id'      => 'required|exists:users,id',
             'category_id'  => 'required|exists:categories,id',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
         ]);
+
+        if ($request->hasFile('img_path')) {
+            if ($post->img_path) {
+                Storage::disk('public')->delete($post->img_path);
+            }
+            $validated['img_path'] = $request->file('img_path')->store('posts', 'public');
+        } else {
+            unset($validated['img_path']);
+        }
 
         $post->update($validated);
 
