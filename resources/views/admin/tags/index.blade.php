@@ -1,12 +1,12 @@
-<x-layouts::app title="Categorías">
+<x-layouts::app title="Etiquetas">
     <div class="flex justify-between items-center mb-6">
         <div>
-            <flux:heading size="xl">Categorías</flux:heading>
-            <flux:subheading>Gestiona las categorías de tu sitio</flux:subheading>
+            <flux:heading size="xl">Etiquetas</flux:heading>
+            <flux:subheading>Gestiona las etiquetas de tus posts</flux:subheading>
         </div>
         
-        <flux:button href="{{ route('admin.categories.create') }}" variant="primary" icon="plus">
-            Nueva Categoría
+        <flux:button href="{{ route('admin.tags.create') }}" variant="primary" icon="plus">
+            Nueva Etiqueta
         </flux:button>
     </div>
 
@@ -43,16 +43,18 @@
             </flux:table.columns>
 
             <flux:table.rows>
-                @foreach ($categories as $category)
+                @foreach ($tags as $tag)
                     <flux:table.row>
-                        <flux:table.cell>{{ $category->id }}</flux:table.cell>
-                        <flux:table.cell font="medium">{{ $category->name }}</flux:table.cell>
-                        <flux:table.cell>{{ $category->slug }}</flux:table.cell>
+                        <flux:table.cell>{{ $tag->id }}</flux:table.cell>
+                        <flux:table.cell font="medium">
+                            <flux:badge size="sm" inset="top bottom">{{ $tag->name }}</flux:badge>
+                        </flux:table.cell>
+                        <flux:table.cell>{{ $tag->slug }}</flux:table.cell>
                         <flux:table.cell align="end">
                             <div class="flex justify-end gap-2">
-                                <flux:button href="{{ route('admin.categories.edit', $category) }}" variant="ghost" size="sm" icon="pencil-square" />
+                                <flux:button href="{{ route('admin.tags.edit', $tag) }}" variant="ghost" size="sm" icon="pencil-square" />
                                 
-                                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('¿Eliminar categoría?')">
+                                <form action="{{ route('admin.tags.destroy', $tag) }}" method="POST" onsubmit="return confirm('¿Eliminar etiqueta?')">
                                     @csrf
                                     @method('DELETE')
                                     <flux:button type="submit" variant="ghost" size="sm" icon="trash" color="red" />
@@ -65,7 +67,7 @@
         </flux:table>
 
         <div class="mt-4">
-            {{ $categories->links() }}
+            {{ $tags->links() }}
         </div>
     </flux:card>
 </x-layouts::app>

@@ -1,16 +1,16 @@
-<x-layouts::app title="Nueva Categoría">
+<x-layouts::app title="Nueva Etiqueta">
     <div class="mb-6">
-        <flux:heading size="xl">Crear Categoría</flux:heading>
-        <flux:subheading>Añade una nueva clasificación para tus productos o artículos.</flux:subheading>
+        <flux:heading size="xl">Crear Etiqueta</flux:heading>
+        <flux:subheading>Añade una nueva etiqueta para clasificar tus posts.</flux:subheading>
     </div>
 
     <flux:card>
-        <form action="{{ route('admin.categories.store') }}" method="POST" class="space-y-6">
+        <form action="{{ route('admin.tags.store') }}" method="POST" class="space-y-6">
             @csrf
 
             <flux:input 
-                label="Nombre de la categoría" 
-                placeholder="Ej: Electrónica" 
+                label="Nombre de la etiqueta" 
+                placeholder="Ej: Laravel" 
                 name="name" 
                 id="name"
                 value="{{ old('name') }}"
@@ -20,7 +20,7 @@
 
             <flux:input 
                 label="Slug (URL amigable)" 
-                placeholder="ej-electronica" 
+                placeholder="ej-laravel" 
                 name="slug" 
                 id="slug"
                 value="{{ old('slug') }}"
@@ -30,12 +30,12 @@
             @error('slug') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
             <div class="flex gap-2 justify-end">
-                <flux:button href="{{ route('admin.categories.index') }}" variant="ghost">
+                <flux:button href="{{ route('admin.tags.index') }}" variant="ghost">
                     Cancelar
                 </flux:button>
                 
                 <flux:button type="submit" variant="primary">
-                    Guardar Categoría
+                    Guardar Etiqueta
                 </flux:button>
             </div>
         </form>

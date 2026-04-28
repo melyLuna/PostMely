@@ -1,41 +1,40 @@
-<x-layouts::app title="Nueva Categoría">
+<x-layouts::app title="Editar Etiqueta">
     <div class="mb-6">
-        <flux:heading size="xl">Crear Categoría</flux:heading>
-        <flux:subheading>Añade una nueva clasificación para tus productos o artículos.</flux:subheading>
+        <flux:heading size="xl">Editar Etiqueta: {{ $tag->name }}</flux:heading>
+        <flux:subheading>Modifica la información de la etiqueta seleccionada.</flux:subheading>
     </div>
 
     <flux:card>
-        <form action="{{ route('admin.categories.store') }}" method="POST" class="space-y-6">
+        <form action="{{ route('admin.tags.update', $tag) }}" method="POST" class="space-y-6">
             @csrf
+            @method('PUT')
 
             <flux:input 
-                label="Nombre de la categoría" 
-                placeholder="Ej: Electrónica" 
+                label="Nombre de la etiqueta" 
                 name="name" 
                 id="name"
-                value="{{ old('name') }}"
+                :value="old('name', $tag->name)"
                 required
             />
             @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
             <flux:input 
                 label="Slug (URL amigable)" 
-                placeholder="ej-electronica" 
                 name="slug" 
                 id="slug"
-                value="{{ old('slug') }}"
+                :value="old('slug', $tag->slug)"
                 icon="link"
                 required
             />
             @error('slug') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
             <div class="flex gap-2 justify-end">
-                <flux:button href="{{ route('admin.categories.index') }}" variant="ghost">
+                <flux:button href="{{ route('admin.tags.index') }}" variant="ghost">
                     Cancelar
                 </flux:button>
                 
                 <flux:button type="submit" variant="primary">
-                    Guardar Categoría
+                    Actualizar Etiqueta
                 </flux:button>
             </div>
         </form>

@@ -23,8 +23,11 @@
     <flux:navlist.item href="{{ route('admin.categories.index') }}" icon="tag" :current="request()->routeIs('admin.categories.*')">
         Categorías
     </flux:navlist.item>
-    <flux:navlist.item href="{{ route('admin.posts.index') }}" icon="tag" :current="request()->routeIs('admin.posts.*')">
+    <flux:navlist.item href="{{ route('admin.posts.index') }}" icon="document-text" :current="request()->routeIs('admin.posts.*')">
         Posts
+    </flux:navlist.item>
+    <flux:navlist.item href="{{ route('admin.tags.index') }}" icon="hashtag" :current="request()->routeIs('admin.tags.*')">
+        Etiquetas
     </flux:navlist.item>
 </flux:navlist>
 
@@ -101,6 +104,7 @@
 
         {{ $slot }}
 
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
         @fluxScripts
     </body>
 </html>

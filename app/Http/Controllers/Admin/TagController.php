@@ -22,7 +22,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.tags.create');
     }
 
     /**
@@ -33,7 +33,6 @@ class TagController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:tags',
             'slug' => 'required|string|unique:tags,slug',
-            'color' => 'nullable|string'
         ]);
 
         Tag::create($validated);
@@ -41,19 +40,11 @@ class TagController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Tag $tag)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Tag $tag)
     {
-        //
+        return view('admin.tags.edit', compact('tag'));
     }
 
     /**
@@ -61,7 +52,13 @@ class TagController extends Controller
      */
     public function update(Request $request, Tag $tag)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:tags,name,' . $tag->id,
+            'slug' => 'required|string|unique:tags,slug,' . $tag->id,
+        ]);
+
+        $tag->update($validated);
+        return redirect()->route('admin.tags.index')->with('info', 'Etiqueta actualizada.');
     }
 
     /**
@@ -69,6 +66,7 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-        //
+        $tag->delete();
+        return redirect()->route('admin.tags.index')->with('info', 'Etiqueta eliminada.');
     }
 }

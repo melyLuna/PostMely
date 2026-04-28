@@ -35,6 +35,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        \Illuminate\Support\Facades\Log::info('Intentando guardar post', $request->all());
         $validated = $request->validate([
             'title'        => 'required|string|max:255',
             'slug'         => 'required|string|unique:posts,slug',
@@ -59,7 +60,7 @@ class PostController extends Controller
         $post->tags()->sync($request->tags); 
     }
 
-        return redirect()->route('admin.posts.index')->with('info', 'Post creado.');
+        return redirect()->route('admin.posts.show', $post)->with('info', 'Post creado correctamente.');
     }
 
     /**
@@ -85,6 +86,7 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        \Illuminate\Support\Facades\Log::info('Intentando actualizar post', $request->all());
         $validated = $request->validate([
             'title'        => 'required|string|max:255',
             'slug'         => 'required|string|unique:posts,slug,' . $post->id,
@@ -112,7 +114,7 @@ class PostController extends Controller
             $post->tags()->sync($request->tags); // Adjuntar etiquetas
         }
 
-        return redirect()->route('admin.posts.index')->with('success', 'Post actualizado.');
+        return redirect()->route('admin.posts.show', $post)->with('success', 'Post actualizado correctamente.');
     }
 
     /**
